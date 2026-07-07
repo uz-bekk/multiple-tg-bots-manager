@@ -3,7 +3,6 @@
 ### *Stop running separate scripts for every Telegram bot. Manage, persist, and broadcast across an entire fleet from a single, beautiful master admin panel.*
 
 [](https://www.python.org)
-[suspicious link removed]
 [](https://opensource.org/licenses/MIT)
 
 ---
@@ -42,8 +41,7 @@ The ecosystem is split into clean, modular components designed to prevent circul
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourusername/parked-bots.git
-cd parked-bots
+git clone https://github.com/uz-bekk/multiple-tg-bots-manager.git
 pip install -r requirements.txt
 
 ```
