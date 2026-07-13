@@ -19,7 +19,7 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Mess
 
 from admin_panel import cmd_admin, on_admin_callback
 from config import BOTS_DICT, LOG_CHANNEL_ID, MASTER_LOG_BOT_USERNAME
-from handlers import handle_channel_reply, handle_incoming_private
+from handlers import handle_channel_reply, handle_incoming_private, handle_subscription_callback
 from registry import APPLICATIONS
 from texts import escape_md_v2
 
@@ -51,6 +51,8 @@ async def run_bot(bot_username: str, token: str) -> Application:
         application.add_handler(CommandHandler("admin", cmd_admin, filters=filters.ChatType.PRIVATE))
         application.add_handler(CallbackQueryHandler(on_admin_callback, pattern=r"^adm:"))
         application.add_handler(MessageHandler(filters.ChatType.CHANNEL & filters.REPLY, handle_channel_reply))
+        # Add this alongside your other handlers
+    application.add_handler(CallbackQueryHandler(handle_subscription_callback, pattern="^check_subscription$"))
 
     application.add_handler(MessageHandler(filters.ChatType.PRIVATE, handle_incoming_private))
 
@@ -62,11 +64,13 @@ async def run_bot(bot_username: str, token: str) -> Application:
 
     safe_startup_name = escape_md_v2(bot_username)
     try:
-        await application.bot.send_message(
-            chat_id=LOG_CHANNEL_ID,
-            text=fr"🤖 *{safe_startup_name}* started working\!",
-            parse_mode="MarkdownV2",
-        )
+        if bot_username == "@IELTS_by_Komronbek_bot" or bot_username == BOTS_DICT.get(bot_username, [])[0]:
+            await application.bot.send_message(
+                chat_id=LOG_CHANNEL_ID,
+                text=fr"🤖 Fellow bots started working\! You can be proud\, my boy\!",
+                parse_mode="MarkdownV2"
+            )
+            logger.info("🤖 Fellow bots started working! You can be proud, my boy! Master: %s", bot_username)
     except TelegramError as exc:
         logger.warning("Could not send startup message for %s: %s", bot_username, exc)
 
@@ -100,4 +104,7 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\n🛑 Goodbye!")

@@ -19,6 +19,7 @@ MASTER_LOG_BOT_USERNAME: str = BOT_LIST[0]
 
 LOG_CHANNEL_ID = -1000123456789
 OWNER_CONTACT = "@Username"
+REQUIRED_CHANNELS = ["@channel_username"]  # Add channel usernames or IDs here to make user join before using the bots
 
 # --------------------------------------------------------------------------- #
 # ADMIN ACCESS
